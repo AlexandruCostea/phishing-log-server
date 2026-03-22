@@ -1,0 +1,65 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Phishing Log Interception API",
+    "version": "1.0.0",
+    "description": "API for logging and retrieving phishing analysis data."
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key"
+      }
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "paths": {
+    "/api/logs": {
+      "post": {
+        "summary": "Store a new analysis log",
+        "description": "Accepts phishing analysis data and stores it in the database.",
+        "tags": ["Logs"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "analysis_mode": { "type": "string", "example": "advanced" },
+                  "ai_provider": { "type": "string", "example": "gemini" },
+                  "phishing_detected": { "type": "boolean", "example": true },
+                  "raw_data": { 
+                    "type": "object", 
+                    "example": {"subject": "Urgent Password Reset", "sender": "admin@fake-google.com"} 
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Log stored successfully" },
+          "401": { "description": "Unauthorized - Invalid API Key" },
+          "500": { "description": "Internal Server Error" }
+        }
+      },
+      "get": {
+        "summary": "Retrieve all stored logs",
+        "description": "Fetches a list of all phishing analysis logs stored in the database.",
+        "tags": ["Logs"],
+        "responses": {
+          "200": { "description": "A list of logs" },
+          "401": { "description": "Unauthorized - Invalid API Key" },
+          "500": { "description": "Internal Server Error" }
+        }
+      }
+    }
+  }
+}
